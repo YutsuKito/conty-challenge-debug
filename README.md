@@ -65,8 +65,9 @@ O autor realizou a revisão pessoal dos nove desafios, conforme declarado nesta 
 | Área | Pontos de análise e revisão |
 |---|---|
 | Geração da estrutura | Preservação da API Hono, SQLite e funções pequenas de prazo, dinheiro, idempotência e status. Ledger, repasse e missão são atualizados em transação. |
-| Geração e revisão dos testes | Os testes oficiais foram preservados. Os testes adicionais cobrem o último milissegundo em São Paulo, o primeiro do dia seguinte, U+200B e retry com outra chave na mesma missão. |
+| Geração e revisão dos testes | Os testes oficiais foram preservados. Os testes adicionais cobrem o último milissegundo em São Paulo, o primeiro do dia seguinte, U+200B, retry com outra chave e preservação dos lançamentos legados em bancos com duplicatas. |
 | Qualidade estrutural | Conferir unicidade do ledger, rollback e comportamento em bancos antigos com duplicatas. |
 
 **Atenção alta identificada na revisão pessoal:** a criação dos índices únicos rejeita bancos antigos com duplicatas. Essa decisão está documentada e é preferível a apagar lançamentos automaticamente.
 
+A validação final passou em 13 testes (9 oficiais e 4 adicionais), além de `npm run typecheck`. Dois testes de banco legado simulam duplicidade por missão e por chave: a abertura informa a necessidade de reconciliação, os lançamentos permanecem iguais e os índices únicos não são criados sobre dados inconsistentes. A reconciliação financeira de um banco real deve ser feita com análise dos lançamentos; o protótipo não elimina duplicatas automaticamente.
