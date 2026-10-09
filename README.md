@@ -79,3 +79,8 @@ Após a comparação dos PRs, cinco novos testes verificam chave invisível e da
 A chave de idempotência tem escopo global: reutilização em outra missão retorna 409. Uma missão já creditada retorna o lançamento existente mesmo com nova chave. A prova de simultaneidade cobre a mesma instância da aplicação; não representa teste entre processos independentes.
 
 Esta cobertura foi acrescentada e validada automaticamente pelo Codex após a revisão pessoal anteriormente declarada pelo autor. Cabe ao autor conferir os novos testes de integridade antes da submissão.
+## Auditoria de dependências em 09/10/2026
+
+O executor de testes foi atualizado para Vitest 4.1.11 e o lockfile foi regenerado. A auditoria anterior apontava três alertas em ferramentas de desenvolvimento; `npm audit` após a atualização informou zero vulnerabilidades conhecidas. As suítes oficiais e a compilação TypeScript passaram sem alterações nos testes, configuração de avaliação ou scripts de execução. Referência da migração: https://v4.vitest.dev/guide/migration.html.
+
+Essa atualização foi implementada e validada pelo Codex após a revisão pessoal anteriormente declarada pelo autor.
