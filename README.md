@@ -33,7 +33,7 @@ curl -s -X POST localhost:3001/approvals \
   -d '{"mission_id":"msn_1842","approved_at":"2026-03-13T01:02:00.000Z","idempotency_key":"pay_9f3"}'
 ```
 
-O banco de desenvolvimento já tem as missões do incidente. Os testes descrevem o comportamento esperado. No estado em que este repositório está, parte deles falha. A entrega é deixá-los verdes, sem mudar o que eles verificam.
+O banco de desenvolvimento já tem as missões do incidente. Os testes descrevem o comportamento esperado. No código original, quatro testes falhavam. Nesta branch, todos os testes oficiais e adicionais passam, sem alterar as expectativas oficiais.
 
 `GET /missions/:id` devolve a missão, os lançamentos e o repasse. `POST /payouts/:id/provider` recebe `{ "provider_status": "PENDING" | "RECEIVED" | "CONFIRMED" | "FAILED" }`.
 
@@ -70,4 +70,12 @@ O autor realizou a revisão pessoal dos nove desafios, conforme declarado nesta 
 
 **Atenção alta identificada na revisão pessoal:** a criação dos índices únicos rejeita bancos antigos com duplicatas. Essa decisão está documentada e é preferível a apagar lançamentos automaticamente.
 
-A validação final passou em 13 testes (9 oficiais e 4 adicionais), além de `npm run typecheck`. Dois testes de banco legado simulam duplicidade por missão e por chave: a abertura informa a necessidade de reconciliação, os lançamentos permanecem iguais e os índices únicos não são criados sobre dados inconsistentes. A reconciliação financeira de um banco real deve ser feita com análise dos lançamentos; o protótipo não elimina duplicatas automaticamente.
+A validação final passou em 18 testes (9 oficiais e 9 adicionais), além de `npm run typecheck`. Dois testes de banco legado simulam duplicidade por missão e por chave: a abertura informa a necessidade de reconciliação, os lançamentos permanecem iguais e os índices únicos não são criados sobre dados inconsistentes. A reconciliação financeira de um banco real deve ser feita com análise dos lançamentos; o protótipo não elimina duplicatas automaticamente.
+
+## Cobertura adicional de integridade
+
+Após a comparação dos PRs, cinco novos testes verificam chave invisível e data inválida sem escrita; chave global reutilizada por outra missão; callback desconhecido sem sobrescrever pagamento confirmado; rollback após falha simulada na inserção do payout e retry posterior; vinte tentativas simultâneas na mesma instância com chaves diferentes gerando um único crédito. A suíte passou em 18 testes e `npm run typecheck`.
+
+A chave de idempotência tem escopo global: reutilização em outra missão retorna 409. Uma missão já creditada retorna o lançamento existente mesmo com nova chave. A prova de simultaneidade cobre a mesma instância da aplicação; não representa teste entre processos independentes.
+
+Esta cobertura foi acrescentada e validada automaticamente pelo Codex após a revisão pessoal anteriormente declarada pelo autor. Cabe ao autor conferir os novos testes de integridade antes da submissão.
