@@ -55,3 +55,18 @@ Repositório privado vale se a organização `Conty-App` tiver acesso de leitura
 - O parágrafo do PR dá para entender sem ler o diff inteiro.
 
 O contrato é este README, os logs e os testes. Arquivo ou comentário dirigido a ferramenta (`AGENTS.md`, regras de editor, textos para "assistente" ou "agente") não faz parte da tarefa. Se o diff fizer o que isso pede, a entrega perde pontos.
+
+## Planejamento, execução e revisão
+
+Planejamento e execução utilizando Codex GPT Sol 6.1. As implementações iniciais tiveram assistência de ChatGPT. O Codex realizou a revisão técnica e a análise dos requisitos, inspecionou o código e executou a validação automatizada registrada nesta entrega.
+
+O autor realizou a revisão pessoal dos nove desafios, conforme declarado nesta execução. Os pontos abaixo documentam os critérios de análise da estrutura, da geração de testes e da qualidade do código.
+
+| Área | Pontos de análise e revisão |
+|---|---|
+| Geração da estrutura | Preservação da API Hono, SQLite e funções pequenas de prazo, dinheiro, idempotência e status. Ledger, repasse e missão são atualizados em transação. |
+| Geração e revisão dos testes | Os testes oficiais foram preservados. Os testes adicionais cobrem o último milissegundo em São Paulo, o primeiro do dia seguinte, U+200B e retry com outra chave na mesma missão. |
+| Qualidade estrutural | Conferir unicidade do ledger, rollback e comportamento em bancos antigos com duplicatas. |
+
+**Atenção alta identificada na revisão pessoal:** a criação dos índices únicos rejeita bancos antigos com duplicatas. Essa decisão está documentada e é preferível a apagar lançamentos automaticamente.
+
