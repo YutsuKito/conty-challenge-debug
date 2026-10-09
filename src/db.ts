@@ -31,5 +31,19 @@ export function openDatabase(path: string): DatabaseSync {
   if (path !== ":memory:") mkdirSync(dirname(path), { recursive: true });
   const db = new DatabaseSync(path);
   db.exec(SCHEMA);
+  const duplicate = db.prepare(`
+    SELECT mission_id AS value FROM ledger GROUP BY mission_id HAVING COUNT(*) > 1
+    UNION ALL
+    SELECT idempotency_key AS value FROM ledger GROUP BY idempotency_key HAVING COUNT(*) > 1
+    LIMIT 1
+  `).get();
+  if (duplicate) {
+    db.close();
+    throw new Error("Ledger antigo contém duplicatas; reconcilie os lançamentos antes de criar índices únicos");
+  }
+  db.exec(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_ledger_one_per_mission ON ledger(mission_id);
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_ledger_idempotency ON ledger(idempotency_key);
+  `);
   return db;
 }
